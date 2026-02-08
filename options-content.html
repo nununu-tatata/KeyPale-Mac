@@ -1,0 +1,262 @@
+<!-- オプション設定モーダル用コンテンツ（fetch で読み込み） -->
+<div class="options-tabs">
+  <button type="button" class="options-tab active" data-tab="basic-colors">基本カラー</button>
+  <button type="button" class="options-tab" data-tab="custom-highlight">カスタムハイライト</button>
+  <button type="button" class="options-tab" data-tab="template-phrases">定型文設定</button>
+  <button type="button" class="options-tab" data-tab="tool-settings">ツール設定</button>
+  <button type="button" class="options-tab" data-tab="shortcuts">ショートカット</button>
+</div>
+<div class="options-tab-panels">
+  <div id="tab-basic-colors" class="options-tab-panel active">
+    <p class="options-desc">現在のテーマ（<strong id="current-theme-name">Dark</strong>）の配色を変更できます。</p>
+    <section class="options-card">
+      <h4 class="options-card-title">エディタ・プレビュー表示</h4>
+      <div class="options-row">
+        <div class="options-field">
+          <label class="options-label">親プルダウン (###)</label>
+          <div class="options-color"><input type="color" id="pd-parent-color-picker" aria-label="親プルダウンの色"><span class="options-color-name">文字色</span></div>
+        </div>
+        <div class="options-field">
+          <label class="options-label">子プルダウン (####)</label>
+          <div class="options-color"><input type="color" id="pd-child-color-picker" aria-label="子プルダウンの色"><span class="options-color-name">文字色</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">エディタ表示</h4>
+      <div class="options-row">
+        <div class="options-field">
+          <label class="options-label">リンク（URL）</label>
+          <div class="options-color"><input type="color" id="editor-link-color-picker" aria-label="エディタ内URLの色"><span class="options-color-name">文字色</span></div>
+        </div>
+        <div class="options-field">
+          <label class="options-label">全角スペース</label>
+          <div class="options-color"><input type="color" id="editor-full-space-color-picker" aria-label="全角スペースのハイライト色"><span class="options-color-name">ハイライト</span></div>
+        </div>
+        <div class="options-field">
+          <label class="options-label">半角スペース</label>
+          <div class="options-color"><input type="color" id="editor-half-space-color-picker" aria-label="半角スペースのハイライト色"><span class="options-color-name">ハイライト</span></div>
+        </div>
+        <div class="options-field">
+          <label class="options-label">改行マーク</label>
+          <div class="options-color"><input type="color" id="editor-newline-mark-color-picker" aria-label="改行マークの色"><span class="options-color-name">色</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">プレビュー表示</h4>
+      <div class="options-row">
+        <div class="options-field">
+          <label class="options-label">演出表記</label>
+          <div class="options-color"><input type="color" id="tekey-effect-notation-color-picker" aria-label="演出表記の色"><span class="options-color-name">色</span></div>
+        </div>
+      </div>
+    </section>
+    <button type="button" id="reset-theme-btn" class="options-reset-btn">このテーマの色を初期値に戻す</button>
+  </div>
+  <div id="tab-custom-highlight" class="options-tab-panel">
+    <p class="options-desc">キーワードに色と背景を付けてエディタで強調表示します。1行に1キーワードで複数登録できます。</p>
+    <section class="options-card">
+      <h4 class="options-card-title">キーワードを追加</h4>
+      <div class="options-highlight-add">
+        <div class="options-field options-field-block">
+          <label class="options-label">キーワード（1行に1つ）</label>
+          <textarea id="hl-keywords-input" class="input-text options-textarea" rows="4" placeholder="例:&#10;注意&#10;重要&#10;未確認"></textarea>
+        </div>
+        <div class="options-field options-field-inline">
+          <label class="options-label">文字色</label>
+          <input type="color" id="hl-text-color" value="#ff0000" class="options-color-input" aria-label="文字色">
+        </div>
+        <div class="options-field options-field-inline">
+          <label class="options-label">背景</label>
+          <input type="color" id="hl-bg-color" value="#ffffff" class="options-color-input" aria-label="背景色">
+          <label class="options-check"><input type="checkbox" id="hl-bg-transparent" checked>透明</label>
+        </div>
+        <button type="button" id="hl-add-btn" class="action-btn options-add-btn">追加</button>
+      </div>
+      <div class="options-highlight-list-header">
+        <label class="options-label options-list-label">登録済みキーワード（右クリックで編集）</label>
+        <div class="options-highlight-list-actions">
+          <button type="button" id="hl-export-btn" class="small-btn">💾 保存 (JSON)</button>
+          <button type="button" id="hl-import-btn" class="small-btn">📂 読込 (JSON)</button>
+        </div>
+      </div>
+      <input type="file" id="hl-import-input" accept=".json" style="display:none;">
+      <div id="highlight-list" class="options-highlight-list"></div>
+      <div id="hl-context-menu" class="options-context-menu hidden">
+        <div class="options-context-menu-item" data-action="edit">編集</div>
+      </div>
+      <div id="hl-edit-form" class="options-highlight-edit hidden">
+        <h4 class="options-card-title">キーワードを編集</h4>
+        <div class="options-field options-field-block options-edit-keyword-wrap">
+          <label class="options-label">キーワード</label>
+          <input type="text" id="hl-edit-keyword" class="input-text options-input options-edit-input" maxlength="200">
+        </div>
+        <div class="options-edit-color-row">
+          <label class="options-label">文字色</label>
+          <input type="color" id="hl-edit-text-color" class="options-color-input" aria-label="文字色">
+          <label class="options-label">背景</label>
+          <input type="color" id="hl-edit-bg-color" class="options-color-input" aria-label="背景色">
+          <label class="options-check"><input type="checkbox" id="hl-edit-bg-transparent">透明</label>
+        </div>
+        <div class="options-edit-actions">
+          <button type="button" id="hl-edit-update-btn" class="action-btn">更新</button>
+          <button type="button" id="hl-edit-cancel-btn" class="small-btn">キャンセル</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="tab-template-phrases" class="options-tab-panel">
+    <p class="options-desc">定型文を、ショートカットキーでエディタに挿入できます。スニペットも右クリックの編集からショートカットキーを設定できます。</p>
+    <section class="options-card">
+      <h4 class="options-card-title">定型文を追加</h4>
+      <div class="options-highlight-add">
+        <div class="options-field options-field-flex">
+          <label class="options-label">ショートカット</label>
+          <input type="text" id="tp-shortcut-input" class="input-text shortcut-capture-input" placeholder="例: Alt+Shift+A">
+        </div>
+        <div class="options-field options-field-block options-tp-text-field">
+          <label class="options-label">挿入する文字列</label>
+          <input type="text" id="tp-text-input" class="input-text options-input" placeholder="例: \n や @#424242">
+        </div>
+        <button type="button" id="tp-add-btn" class="action-btn options-add-btn">追加</button>
+      </div>
+      <div class="options-highlight-list-header">
+        <label class="options-label options-list-label">登録済み定型文（右クリックで編集・削除）</label>
+      </div>
+      <div id="template-phrases-list" class="options-highlight-list"></div>
+      <div id="tp-context-menu" class="options-context-menu hidden">
+        <div class="options-context-menu-item" data-action="edit">編集</div>
+        <div class="options-context-menu-item" data-action="delete">削除</div>
+      </div>
+      <div id="tp-edit-form" class="options-highlight-edit hidden">
+        <h4 class="options-card-title">定型文を編集</h4>
+        <div class="options-field">
+          <label class="options-label">ショートカット</label>
+          <input type="text" id="tp-edit-shortcut" class="input-text options-input shortcut-capture-input">
+        </div>
+        <div class="options-field">
+          <label class="options-label">挿入する文字列</label>
+          <input type="text" id="tp-edit-text" class="input-text options-input">
+        </div>
+        <div class="options-edit-actions">
+          <button type="button" id="tp-edit-update-btn" class="action-btn">更新</button>
+          <button type="button" id="tp-edit-cancel-btn" class="small-btn">キャンセル</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="tab-tool-settings" class="options-tab-panel">
+    <p class="options-desc">パネルに載せない細かい ON/OFF オプションです。</p>
+    <section class="options-card">
+      <h4 class="options-card-title">プレビュー</h4>
+      <div class="options-row options-tool-setting-row">
+        <label class="options-check options-check-block">
+          <input type="checkbox" id="tool-no-preview-dropdown-toggle">
+          エディタ編集時に、プレビューのプルダウン開閉を行わない
+        </label>
+        <p class="options-tool-desc">ON のとき、折りたたんだプルダウンは編集後も閉じたままになります。</p>
+      </div>
+      <div class="options-row options-tool-setting-row">
+        <label class="options-check options-check-block">
+          <input type="checkbox" id="tool-sync-editor-preview-line">
+          エディタとプレビューの行を連動させる
+        </label>
+        <p class="options-tool-desc">ON のとき、エディタの行をクリックするとプレビューも同じ行付近にスクロールします。</p>
+      </div>
+    </section>
+  </div>
+  <div id="tab-shortcuts" class="options-tab-panel">
+    <p class="options-desc">ショートカットキーを自由に設定できます。例: Ctrl+Shift+O / Ctrl+Alt+S / F1</p>
+    <section class="options-card">
+      <h4 class="options-card-title">ファイル</h4>
+      <div class="options-row options-shortcut-list options-shortcut-grid">
+        <div class="options-field">
+          <label class="options-label">新規タブ</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="newTab" placeholder="Ctrl+N">
+        </div>
+        <div class="options-field">
+          <label class="options-label">開く(txt)</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="openTxt" placeholder="Ctrl+O">
+        </div>
+        <div class="options-field">
+          <label class="options-label">JSONからタブを開く</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="openJson" placeholder="Ctrl+Shift+O">
+        </div>
+        <div class="options-field">
+          <label class="options-label">上書き保存</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="save" placeholder="Ctrl+S">
+        </div>
+        <div class="options-field">
+          <label class="options-label">名前を付けて保存</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="saveAs" placeholder="Ctrl+Shift+S">
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">Tekey連携</h4>
+      <div class="options-row options-shortcut-list options-shortcut-grid">
+        <div class="options-field">
+          <label class="options-label">現在のタブを保存</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="saveTekeyTab" placeholder="Ctrl+Alt+S">
+        </div>
+        <div class="options-field">
+          <label class="options-label">全タブまとめて保存</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="saveTekeyAll" placeholder="Ctrl+Alt+Shift+S">
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">表示</h4>
+      <div class="options-row options-shortcut-list options-shortcut-grid">
+        <div class="options-field">
+          <label class="options-label">ズームイン</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="zoomIn" placeholder="Ctrl++">
+        </div>
+        <div class="options-field">
+          <label class="options-label">ズームアウト</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="zoomOut" placeholder="Ctrl+-">
+        </div>
+        <div class="options-field">
+          <label class="options-label">100%に戻す</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="zoomReset" placeholder="Ctrl+0">
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">設定</h4>
+      <div class="options-row options-shortcut-list options-shortcut-grid">
+        <div class="options-field">
+          <label class="options-label">オプション設定</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="options" placeholder="Ctrl+,">
+        </div>
+        <div class="options-field">
+          <label class="options-label">レイアウト初期化</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="resetLayout" placeholder="Ctrl+Alt+R">
+        </div>
+        <div class="options-field">
+          <label class="options-label">ヘルプを開く</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="openHelp" placeholder="">
+        </div>
+        <div class="options-field">
+          <label class="options-label">バージョン情報</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="about" placeholder="F1">
+        </div>
+      </div>
+    </section>
+    <section class="options-card">
+      <h4 class="options-card-title">エディタ</h4>
+      <div class="options-row options-shortcut-list options-shortcut-grid">
+        <div class="options-field">
+          <label class="options-label">全行先頭に全角スペース</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="indentAllFull" placeholder="Ctrl+Alt+I">
+        </div>
+        <div class="options-field">
+          <label class="options-label">選択行先頭に全角スペース</label>
+          <input type="text" class="input-text options-shortcut-input" data-shortcut-id="indentSelectionFull" placeholder="Ctrl+Alt+Shift+I">
+        </div>
+      </div>
+    </section>
+    <button type="button" id="reset-shortcuts-btn" class="small-btn">ショートカットを初期値に戻す</button>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+/* css/libs.css */
+/* 外部ライブラリのCSSをまとめて読み込むファイル */
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/pastel-on-dark.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css");

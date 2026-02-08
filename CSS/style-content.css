@@ -1,0 +1,220 @@
+/* css/style-content.css */
+
+:root {
+  --tekey-parent-color: #aaddff;
+  --tekey-child-color: #dddddd;
+  /* エディタ内URLの色（オプションで変更可） */
+  --editor-link-color: #569cd6;
+  /* 改行マークの色（オプションで変更可） */
+  --newline-mark-color: #6a6a6a;
+  /* 構文ハイライト用変数 */
+  --cm-strong-color: #ffaa00;
+  --cm-link-color: #569cd6;
+  --cm-quote-color: #6a9955;
+  --cm-code-color: #ce9178;
+
+  /* プレビューの基本設定 */
+  --preview-font-size: 12px;
+  --preview-line-height: 1.5;
+}
+
+.editor-pane {
+  flex: 1; display: flex; flex-direction: column;
+  min-width: 200px; position: relative;
+  overflow: hidden; 
+}
+
+/* --- ステータスバー --- */
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  height: 22px; padding: 0 10px;
+  background-color: var(--ui-bg); border-top: 1px solid var(--ui-border);
+  font-size: 10px; color: var(--text-color); opacity: 0.8;
+  flex-shrink: 0; user-select: none;
+}
+.status-bar span { font-family: 'Consolas', monospace; }
+
+.divider {
+  width: 5px; cursor: col-resize; background-color: var(--ui-bg);
+  border-left: 1px solid var(--ui-border); border-right: 1px solid var(--ui-border);
+  flex-shrink: 0; transition: background-color 0.2s; z-index: 10;
+}
+.divider:hover { background-color: var(--accent-color); }
+
+/* --- タブバー --- */
+.tab-bar {
+  display: flex; align-items: center; height: 34px;
+  background-color: var(--ui-bg); border-bottom: 1px solid var(--ui-border);
+  padding: 0 5px; gap: 5px; overflow-x: auto; flex-shrink: 0;
+}
+.tab-bar::-webkit-scrollbar { height: 0; }
+.tabs-container { display: flex; align-items: flex-end; height: 100%; gap: 2px; flex: 1; }
+.editor-tab {
+  display: flex; align-items: center; height: 28px; min-width: 80px; max-width: 150px;
+  padding: 0 8px; background-color: var(--input-bg); border: 1px solid var(--ui-border); border-bottom: none;
+  border-radius: 8px 8px 0 0; font-size: 11px; color: var(--text-color); cursor: pointer; opacity: 0.7; transition: all 0.2s; user-select: none; margin-top: 4px;
+}
+.editor-tab:hover { opacity: 1; background-color: var(--ui-border); }
+.editor-tab.active {
+  opacity: 1; background-color: var(--bg-color); border-bottom: 2px solid var(--accent-color);
+  height: 30px; margin-top: 2px; font-weight: bold;
+}
+.editor-tab.dragging { opacity: 0.5; background-color: var(--accent-color); }
+
+.tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 5px; }
+.tab-close { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; opacity: 0.5; }
+.tab-close:hover { background-color: rgba(255,0,0,0.5); color: #fff; opacity: 1; }
+.tab-close::before { content: "×"; }
+
+/* --- CodeMirror本体（ズームは --editor-font-size で変更） --- */
+.CodeMirror {
+  flex: 1; height: 100% !important; width: 100%;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: var(--editor-font-size, 13px); line-height: 1.6;
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  z-index: 0;
+}
+.CodeMirror-gutters { background-color: var(--ui-bg) !important; border-right: 1px solid var(--ui-border) !important; white-space: nowrap; }
+.CodeMirror-linenumber { color: #666 !important; padding-right: 5px; }
+.CodeMirror-foldgutter { width: 30px; background-color: transparent; }
+.CodeMirror-foldgutter-open, .CodeMirror-foldgutter-folded { cursor: pointer; color: var(--accent-color); font-size: 16px; line-height: 1.4; text-align: center; width: 100%; display: inline-block; transition: transform 0.2s, color 0.2s; }
+.CodeMirror-foldgutter-open:hover, .CodeMirror-foldgutter-folded:hover { color: var(--text-color); transform: scale(1.1); }
+.CodeMirror-foldgutter-open:after { content: "▼"; }
+.CodeMirror-foldgutter-folded:after { content: "▶"; }
+.CodeMirror-cursor { border-left: 2px solid var(--accent-color) !important; }
+.CodeMirror-selected { background: rgba(0, 122, 204, 0.3) !important; }
+
+.editor-pane textarea { flex: 1; width: 100%; height: 100%; background-color: var(--bg-color); color: var(--text-color); border: none; outline: none; padding: 15px; resize: none; }
+
+/* 装飾 */
+.cm-tekey-parent, .cm-tekey-child { display: flex !important; align-items: center; width: 100%; padding: 2px 5px; border-radius: 3px; transition: background-color 0.2s; }
+.cm-tekey-parent:hover, .cm-tekey-child:hover { background-color: rgba(128, 128, 128, 0.1); }
+.cm-tekey-parent::after, .cm-tekey-child::after { content: ""; flex: 1; margin-left: 10px; margin-right: 5px; opacity: 0.6; }
+.cm-tekey-parent { font-weight: bold; color: var(--tekey-parent-color) !important; }
+.cm-tekey-parent::after { height: 1px; background-color: var(--accent-color); }
+.cm-tekey-child { font-weight: bold; color: var(--tekey-child-color) !important; padding-left: 20px !important; }
+.cm-tekey-child::after { height: 0px; border-bottom: 1px dashed var(--accent-color); }
+
+.cm-tekey-hr { color: var(--tekey-line-color, var(--accent-color)) !important; }
+.cm-space-fullwidth { background: var(--space-fullwidth-bg, rgba(255, 180, 0, 0.35)); }
+.cm-space-halfwidth { background: var(--space-halfwidth-bg, rgba(0, 180, 255, 0.28)); }
+
+/* 改行を表示（各行の末尾に ↵ マーク。Word の改行表示と同様） */
+.CodeMirror.editor-show-newline .CodeMirror-line::after {
+  content: ' ↵';
+  color: var(--newline-mark-color, #6a6a6a);
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* エディタ内URL（クリックで開く） */
+.cm-editor-link { color: var(--editor-link-color) !important; text-decoration: underline; cursor: pointer; }
+
+.cm-strong { color: var(--cm-strong-color) !important; font-weight: bold; }
+.cm-em { font-style: italic; }
+.cm-link { color: var(--cm-link-color) !important; text-decoration: underline; }
+.cm-url { color: var(--cm-link-color) !important; }
+.cm-quote { color: var(--cm-quote-color) !important; }
+.cm-comment { color: var(--text-color) !important; }
+.cm-code { color: var(--cm-code-color) !important; font-family: 'Consolas', monospace; background: rgba(128,128,128,0.1); border-radius: 2px; }
+
+/* --- プレビューエリア --- */
+.preview-pane { flex: 1; min-width: 200px; background-color: #424242; color: #fff; transition: background-color 0.3s; }
+.preview-pane.light-mode { background-color: #ffffff !important; color: #333333 !important; }
+
+#preview-header { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; height: 32px; background-color: var(--ui-bg); color: var(--text-color); border-bottom: 1px solid var(--ui-border); font-size: 11px; font-weight: bold; flex-shrink: 0; }
+.display-settings { display: flex; align-items: center; gap: 10px; }
+.display-settings label { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #ccc; cursor: pointer; }
+.display-settings input[type="range"] { width: 60px; cursor: pointer; }
+.slider-value { font-size: 10px; color: var(--text-color); min-width: 25px; text-align: right; }
+#bg-toggle-btn { font-size: 10px; padding: 2px 6px; cursor: pointer; background-color: #555; color: white; border: 1px solid #777; border-radius: 3px; }
+
+#preview-content {
+  flex: 1; padding: 15px; overflow-y: auto;
+  font-family: 'Consolas', 'Monaco', monospace;
+  user-select: text;
+  -webkit-user-select: text;
+  white-space: pre-wrap;
+  font-size: var(--preview-font-size);
+  line-height: var(--preview-line-height);
+}
+/* \n 改行行: 1行目と2行目は別の grid 行。2行目は名前幅のスペーサー + 本文で1行目と揃える */
+#preview-content .chat-line.chat-line-grid {
+  white-space: normal;
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+  grid-auto-rows: auto;
+  align-items: start;
+  gap: 4px 0;
+}
+#preview-content .chat-line.chat-line-grid .chat-name {
+  white-space: nowrap;
+}
+#preview-content .chat-line.chat-line-grid .chat-name-spacer {
+  visibility: hidden;
+  white-space: nowrap;
+  font-weight: bold;
+  grid-column: 1;
+}
+#preview-content .chat-line.chat-line-grid .chat-body-line {
+  min-width: 0;
+  min-height: 1em;
+  display: block;
+  text-indent: 0;
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+  word-break: break-all;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+details.tekey-parent, details.tekey-child { border: none; background-color: transparent; }
+details.tekey-parent { margin-bottom: 10px; }
+details.tekey-child { margin: 5px 0; }
+summary { cursor: pointer; font-weight: bold; font-size: 1em; outline: none; user-select: none; padding: 4px 8px; border-radius: 3px; transition: background-color 0.2s; display: flex; align-items: center; }
+summary::-webkit-details-marker { display: inline-block; color: var(--text-color); margin-right: 5px; transition: transform 0.2s; }
+details[open] > summary::-webkit-details-marker { transform: rotate(90deg); color: var(--accent-color); }
+summary:hover { background-color: rgba(128, 128, 128, 0.1); }
+summary::after { content: ""; flex: 1; margin-left: 10px; opacity: 0.6; }
+.preview-pane details.tekey-parent > summary { color: var(--tekey-parent-color) !important; }
+.preview-pane details.tekey-parent > summary::after { height: 1px; background-color: var(--accent-color); }
+.preview-pane details.tekey-child > summary { color: var(--tekey-child-color) !important; }
+.preview-pane details.tekey-child > summary::after { height: 0px; border-bottom: 1px dashed var(--accent-color); }
+
+.chat-line { margin-bottom: 4px; display: flex; align-items: flex-start; font-weight: normal; }
+/* \n 改行あり時: 名前は1行目のみ・本文は2列目で縦に揃え（2行目も1行目本文と同じ左端） */
+.chat-line.chat-line-grid {
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+  grid-auto-rows: auto;
+  align-items: start;
+  gap: 4px 0;
+}
+.chat-line.chat-line-grid .chat-name-spacer {
+  visibility: hidden;
+  white-space: nowrap;
+  font-weight: bold;
+}
+.chat-line.chat-line-grid .chat-body-line {
+  min-width: 0;
+  min-height: 1em;
+  display: block;
+  text-indent: 0;
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.chat-name { font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+.chat-body { word-wrap: break-word; word-break: break-all; flex: 1; display: block; }
+.chat-body-block { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.chat-body-line { word-wrap: break-word; word-break: break-all; display: block; text-indent: 0; margin: 0; padding: 0; min-height: 1em; }
+ruby { ruby-position: over; ruby-align: space-between; -webkit-ruby-align: space-between; font-family: inherit; }
+rt { font-size: 0.5em; text-align: center; color: inherit; }
+.tekey-variable { background-color: rgba(255, 255, 255, 0.15); border-radius: 3px; padding: 0 2px; color: #aaddff; font-weight: bold; }
+.preview-pane.light-mode .tekey-variable { background-color: rgba(0, 0, 0, 0.08); color: #0055aa; }
+.tekey-effect-notation { color: var(--tekey-effect-notation-color, #888); font-size: 0.9em; opacity: 0.85; }
+/* プレビューの罫線・破線：行の文字色（@# またはデフォルト）を継承。オプションの罫線色は使わない */
+.chat-line .tekey-hr { color: inherit; }

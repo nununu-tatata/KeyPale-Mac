@@ -1,0 +1,41 @@
+# macOS 用の KeyPale をビルドし、成果物をアップロードする
+# 手動実行または push 時にトリガー可能
+
+name: Build for macOS
+
+on:
+  workflow_dispatch:   # 手動実行（Actions タブから「Run workflow」）
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for macOS
+        run: npx electron-builder --mac --publish never
+
+      - name: Upload Mac build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyPale-macOS
+          path: |
+            dist/*.zip
+            dist/*.app
+          if-no-files-found: warn

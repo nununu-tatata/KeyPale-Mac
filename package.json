@@ -1,0 +1,56 @@
+{
+  "name": "keypale",
+  "productName": "KeyPale",
+  "version": "1.0.0",
+  "description": "Tekey向けチャパレ補助エディタ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "start-docking": "electron . --docking",
+    "build:golden-layout": "node build-golden-layout.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "codemirror": "^5.65.16",
+    "golden-layout": "^2.6.0"
+  },
+  "devDependencies": {
+    "electron": "^40.1.0",
+    "electron-builder": "^25.0.0",
+    "esbuild": "^0.24.0"
+  },
+  "build": {
+    "appId": "com.keypale.app",
+    "productName": "KeyPale",
+    "icon": "icon.png",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/.cache/**",
+      "!dist/**"
+    ],
+    "win": {
+      "target": ["portable"],
+      "icon": "icon.png",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": ["zip"],
+      "icon": "icon.png",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "icon.png"
+    }
+  }
+}

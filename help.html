@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KeyPale ヘルプ</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --sidebar: #161b22;
+      --surface: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-hover: #79b8ff;
+      --code-bg: #1c2128;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Yu Gothic UI", Meiryo, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 14px;
+      display: flex;
+    }
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0 20px 10px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .toc-tree { list-style: none; padding: 0; margin: 0; }
+    .toc-tree ul { list-style: none; padding-left: 14px; margin: 2px 0; border-left: 1px solid var(--border); margin-left: 8px; }
+    .toc-tree li { margin: 0; }
+    .toc-tree a {
+      display: block;
+      padding: 6px 20px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+    }
+    .toc-tree a:hover { background: var(--surface); color: var(--accent-hover); }
+    .toc-tree a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(88, 166, 255, 0.08); }
+    .toc-tree .toc-section { font-weight: 600; color: var(--text); }
+    .toc-tree .toc-sub { font-weight: 400; color: var(--text-muted); }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 40px 60px;
+    }
+    .main h1 {
+      font-size: 1.85rem;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+      color: var(--text);
+    }
+    .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 36px; }
+    h2 {
+      font-size: 1.25rem;
+      margin: 36px 0 14px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    h2:first-of-type { margin-top: 0; }
+    h3 { font-size: 1.05rem; margin: 22px 0 8px 0; color: var(--text); }
+    p { margin: 0 0 12px 0; }
+    ul, ol { margin: 0 0 12px 0; padding-left: 1.5em; }
+    li { margin: 5px 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, .code {
+      font-family: "Consolas", "Monaco", "Yu Gothic UI", monospace;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--code-bg);
+      padding: 14px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 12px 0;
+      border: 1px solid var(--border);
+    }
+    pre code { background: none; padding: 0; border: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th { background: var(--surface); color: var(--text); font-weight: 600; }
+    .note {
+      background: rgba(88, 166, 255, 0.1);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      padding: 12px 14px;
+      margin: 14px 0;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .preview-warn { font-weight: bold; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+    .footer { color: var(--text-muted); font-size: 12px; margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-title">目次</div>
+    <nav class="toc-tree">
+      <ul>
+        <li><a href="#about" class="toc-section">KeyPale とは</a></li>
+        <li><a href="#ui" class="toc-section">画面の構成</a>
+          <ul>
+            <li><a href="#ui-titlebar" class="toc-sub">タイトルバー・ウィンドウ</a></li>
+            <li><a href="#ui-panels" class="toc-sub">主なパネル</a></li>
+          </ul>
+        </li>
+        <li><a href="#basics" class="toc-section">基本操作</a></li>
+        <li><a href="#file" class="toc-section">ファイル操作</a></li>
+        <li><a href="#tekey" class="toc-section">Tekey 連携（JSON）</a></li>
+        <li><a href="#snippets" class="toc-section">スニペット</a></li>
+        <li><a href="#variables" class="toc-section">変数</a></li>
+        <li><a href="#syntax" class="toc-section">Tekey 書式の説明</a></li>
+        <li><a href="#preview" class="toc-section">プレビュー</a></li>
+        <li><a href="#options" class="toc-section">オプション設定</a>
+          <ul>
+            <li><a href="#options-template" class="toc-sub">定型文設定</a></li>
+          </ul>
+        </li>
+        <li><a href="#shortcuts" class="toc-section">ショートカット一覧</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <h1>KeyPale ヘルプ</h1>
+    <p class="subtitle">Tekeyチャットパレット用エディタの使い方</p>
+
+    <section id="about">
+      <h2>KeyPale とは</h2>
+      <p>KeyPale は、<strong>Tekey</strong> 用のチャットパレット（シナリオテキスト）を編集するためのデスクトップアプリです。複数タブでシナリオを管理し、スニペット・変数で定型文を素早く挿入できます。プレビューで見た目を確認しながら、Tekey 形式の JSON にエクスポートして Tekey で利用できます。</p>
+    </section>
+
+    <section id="ui">
+      <h2>画面の構成</h2>
+      <h3 id="ui-titlebar">タイトルバー・ウィンドウ</h3>
+      <ul>
+        <li><strong>左側</strong> … メニューボタン（≡）とアプリ名「KeyPale」があります。</li>
+        <li><strong>右側</strong> … テーマボタン（🎨）と、OS のウィンドウボタン（最小化・最大化・閉じる）があります。<strong>テーマボタン（🎨）をクリックすると、ダーク・ライト・セピア・グリーンの 4 種類のテーマカラーから切り替えられます。</strong>ウィンドウ右上のボタンでウィンドウの最小化・最大化・閉じるができます。</li>
+        <li><strong>メニュー</strong> … 左上の ≡ から「ファイル」「Tekey連携」「表示」「設定」「ヘルプ」を開けます。</li>
+        <li><strong>パネル</strong> … 画面は複数のパネルに分かれており、ドラッグで位置やサイズを変えられます。レイアウトは終了時に自動保存されます。</li>
+      </ul>
+      <h3 id="ui-panels">主なパネル</h3>
+      <ul>
+        <li><strong>スニペット</strong> … 登録した定型文の一覧。クリックでエディタに挿入。パネル上部の ⋮ メニューで「読込 (JSON)」「保存 (JSON)」「スニペットを初期に戻す」ができます。</li>
+        <li><strong>変数</strong> … 名前と値の一覧。<code>{変数名}</code> がエディタ・プレビューで値に置き換わります。パネル上部の「全タブの変数を参照」で、全タブ共通の変数を使うか切り替えられます。⋮ で読込・保存 (JSON)。</li>
+        <li><strong>エディタ</strong> … シナリオを書くメインの編集エリア。タブで複数シナリオを切り替え。上部に「ラベル」「名前」入力やカラーパレット（🎨）、エディタオプション（▼）があります。</li>
+        <li><strong>プレビュー</strong> … Tekey 書式でレンダリングした結果を表示。フォントサイズ・行間・演出表記の表示 ON/OFF・背景などが変更できます。<strong class="preview-warn">あくまでプレビューであり、お使いの環境やブラウザによって実際の Tekey での表示と違う点があります。参考までに使用してください。</strong></li>
+      </ul>
+    </section>
+
+    <section id="basics">
+      <h2>基本操作</h2>
+      <h3>タブ</h3>
+      <p>エディタ上部の「＋」で新規タブを追加。タブの × で閉じます。各タブには「ラベル」（タブに表示する名前）と「名前」（プレビューで使うキャラ名）を設定できます。タブの並び順や開いているタブは終了時に保存され、次回起動時に復元されます。</p>
+      <h3>編集</h3>
+      <p>エディタでは通常のテキスト編集に加え、右クリックメニューから「全行先頭に全角スペース」「選択行の先頭に全角スペース」が使えます。オプション（▼）から全角・半角スペースのハイライト、<strong>改行を表示</strong>（各行の末尾に ↵ マークを表示）も有効にできます。</p>
+      <h3>検索・置換</h3>
+      <p>Ctrl+F で検索パネル、Ctrl+H で置換パネルを開けます。検索語・置換語のほか、正規表現や大文字/小文字の区別を指定できます。<strong>テキストを選択した状態で「全置換」を押すと、選択範囲内だけを置換</strong>します。選択していない場合は全文が対象です。</p>
+    </section>
+
+    <section id="file">
+      <h2>ファイル操作</h2>
+      <ul>
+        <li><strong>開く (txt)</strong> … テキストファイルを開き、内容を現在のタブまたは新規タブに読み込みます。</li>
+        <li><strong>JSON からタブを開く</strong> … KeyPale 形式または Tekey 形式の JSON を開き、タブを復元します。</li>
+        <li><strong>上書き保存 (txt)</strong> … 現在のタブの内容を、最後に開いた（または保存した）テキストファイルに上書き保存します。</li>
+        <li><strong>名前を付けて保存</strong> … 新しいファイル名を指定してテキストで保存します。</li>
+      </ul>
+      <p class="note">テキストで保存する場合は「開く」「上書き保存」で .txt、JSON でタブをやりとりする場合は「JSON からタブを開く」と「Tekey連携」の保存を使い分けてください。</p>
+    </section>
+
+    <section id="tekey">
+      <h2>Tekey 連携（JSON）</h2>
+      <p>メニュー「Tekey連携 (JSON)」から、Tekey で読み込める形式の JSON を保存できます。</p>
+      <ul>
+        <li><strong>現在のタブを保存 (.json)</strong> … アクティブなタブ 1 つを Tekey 形式の JSON で保存します。</li>
+        <li><strong>全タブまとめて保存 (.json)</strong> … 開いている全タブを 1 つの JSON にまとめて保存します。</li>
+      </ul>
+      <p>保存した JSON を Tekey 側で読み込んで、チャットパレットとして利用できます。</p>
+    </section>
+
+    <section id="snippets">
+      <h2>スニペット</h2>
+      <p>よく使う文言を登録しておき、一覧からクリックでエディタに挿入できます。</p>
+      <h3>追加</h3>
+      <p>スニペットパネル内で「＋」や「スニペット追加」で、表示名と内容を入力して保存します。<strong>ショートカット（任意）</strong>欄にキー（例: Alt+Shift+A）を指定すると、エディタにフォーカスがあるときにそのキーを押すだけで、そのスニペットの内容がカーソル位置に挿入されます。入力欄にフォーカスを置いてキーを押すと、そのキー組み合わせが記録されます。</p>
+      <h3>編集・削除</h3>
+      <p>一覧の項目を右クリックして「編集」または「削除」を選びます。編集画面でもショートカットの変更・削除ができます。</p>
+      <h3>読込・保存 (JSON)</h3>
+      <p>パネルヘッダの ⋮ メニューから「読込 (JSON)」「保存 (JSON)」で、スニペット一覧をファイルに出し入れできます。別環境やバックアップに便利です。</p>
+    </section>
+
+    <section id="variables">
+      <h2>変数</h2>
+      <p>「変数名」と「値」を登録しておくと、エディタやプレビュー内の <code>{変数名}</code> がその値に置き換わります。</p>
+      <h3>定義の優先順位</h3>
+      <ul>
+        <li>同じタブ内の <code>//変数名=値</code> が最優先。</li>
+        <li>変数パネルに登録した値がその次。「全タブの変数を参照」ON のときは、全タブ共通の変数が対象になります。</li>
+      </ul>
+      <h3>追加・編集・削除</h3>
+      <p>変数パネルで「＋」や「変数追加」から名前と値を入力。一覧を右クリックで「編集」「削除」ができます。⋮ メニューで「読込 (JSON)」「保存 (JSON)」も可能です。<strong>ショートカット（任意）</strong>を追加・編集モーダルで設定すると、エディタにフォーカスがあるときにそのキーを押すだけで <code>{変数名}</code> がカーソル位置に挿入されます。</p>
+    </section>
+
+    <section id="syntax">
+      <h2>Tekey 書式の説明</h2>
+      <p>プレビューおよび Tekey で解釈される主な書式です。</p>
+      <h3>プルダウン（折りたたみ）</h3>
+      <ul>
+        <li><code>### 見出し</code> … 親プルダウンを開始。</li>
+        <li><code>#### 子見出し</code> … 子プルダウンを開始。</li>
+        <li><code>###</code> または <code>####</code> のみの行 … 直前の同じ種類のプルダウンを閉じます。</li>
+      </ul>
+      <h3>発言行と名前・色・演出</h3>
+      <p>通常の行は「名前：本文」として表示されます。名前と色はツールバーの「名前」とパレット（🎨）で設定し、行末の @ コマンドで上書きできます。</p>
+      <ul>
+        <li><code>@[name]:表示名</code> … その行の表示名を変更。</li>
+        <li><code>@#RRGGBB</code> … その行の名前の色を指定（例: <code>@#FF0000</code>）。</li>
+        <li><code>@演出名</code> … 演出表記（プレビューで「演出表記を表示」ON のとき表示）。</li>
+      </ul>
+      <h3>変数</h3>
+      <p><code>//変数名=値</code> でそのタブ内の変数を定義。<code>{変数名}</code> で参照すると値に置き換わります。</p>
+      <h3>その他</h3>
+      <ul>
+        <li><code>|漢字《よみ》</code> または <code>|漢字(よみ)</code> … ルビとして表示。</li>
+        <li><code>\n</code> … 改行に変換。</li>
+      </ul>
+    </section>
+
+    <section id="preview">
+      <h2>プレビュー</h2>
+      <p>プレビューパネルでは、エディタの内容を Tekey 書式でレンダリングして表示します。</p>
+      <ul>
+        <li><strong>フォントサイズ・行間</strong> … ツールバーのスライダーで調整。</li>
+        <li><strong>演出表記</strong> … 「演出表記を表示」の ON/OFF で、@ の後の演出名などを表示するか切り替え。</li>
+        <li><strong>背景</strong> … 暗い・明るい・透明などから選択可能。</li>
+        <li><strong>検索</strong> … パネル内の検索ボックスでプレビュー本文を検索できます。</li>
+      </ul>
+    </section>
+
+    <section id="options">
+      <h2>オプション設定</h2>
+      <p>メニュー「設定」→「オプション設定...」で開きます。</p>
+      <h3>基本カラー</h3>
+      <p>現在のテーマ（ダーク／ライト／セピア／グリーン）の配色を変更できます。親プルダウン・子プルダウンの色、エディタのリンク・全角／半角スペースのハイライト色・<strong>改行マーク</strong>（「改行を表示」ON のとき表示される ↵ の色）、プレビューの演出表記の色などを設定可能です。</p>
+      <h3>カスタムハイライト</h3>
+      <p>キーワードを登録すると、エディタ内でその語に色や背景を付けて強調表示できます。1 行に 1 キーワードで複数登録でき、JSON で保存・読込もできます。</p>
+      <h3 id="options-template">定型文設定</h3>
+      <p>スニペットほどではない短い定型文を、ショートカットキーでエディタに挿入できます。オプションの「定型文設定」タブで、<strong>ショートカット</strong>（例: Alt+Shift+A）と<strong>挿入する文字列</strong>（例: <code>\n</code> や <code>@#424242</code>）を登録します。一覧は右クリックで編集・削除できます。エディタにフォーカスがあるときに登録したキーを押すと、その文字列がカーソル位置に挿入されます。スニペットや変数と同様、ショートカット入力欄にフォーカスを置いてキーを押すとキー組み合わせが記録されます。</p>
+      <h3>ショートカット</h3>
+      <p>各操作に割り当てるショートカットキーを変更できます。重複や不正な形式の場合は保存できずエラー表示されます。「ショートカットを初期値に戻す」でデフォルトに戻せます。</p>
+      <h3>レイアウト初期化</h3>
+      <p>メニュー「設定」→「レイアウト初期化」で、パネルの配置を初期状態に戻します。レイアウトが崩れたときに使ってください。</p>
+    </section>
+
+    <section id="shortcuts">
+      <h2>ショートカット一覧</h2>
+      <p>初期設定の一覧です。オプションの「ショートカット」タブで変更できます。</p>
+      <table>
+        <thead>
+          <tr><th>操作</th><th>キー（初期値）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>新規タブ</td><td>Ctrl+N</td></tr>
+          <tr><td>開く (txt)</td><td>Ctrl+O</td></tr>
+          <tr><td>JSON からタブを開く</td><td>Ctrl+Shift+O</td></tr>
+          <tr><td>上書き保存</td><td>Ctrl+S</td></tr>
+          <tr><td>名前を付けて保存</td><td>Ctrl+Shift+S</td></tr>
+          <tr><td>現在のタブを保存 (Tekey JSON)</td><td>Ctrl+Alt+S</td></tr>
+          <tr><td>全タブまとめて保存 (Tekey JSON)</td><td>Ctrl+Alt+Shift+S</td></tr>
+          <tr><td>ズームイン</td><td>Ctrl++</td></tr>
+          <tr><td>ズームアウト</td><td>Ctrl+-</td></tr>
+          <tr><td>100% に戻す</td><td>Ctrl+0</td></tr>
+          <tr><td>オプション設定</td><td>Ctrl+,</td></tr>
+          <tr><td>レイアウト初期化</td><td>Ctrl+Alt+R</td></tr>
+          <tr><td>バージョン情報</td><td>F1</td></tr>
+          <tr><td>全行先頭に全角スペース</td><td>Ctrl+Alt+I</td></tr>
+          <tr><td>選択行先頭に全角スペース</td><td>Ctrl+Alt+Shift+I</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr>
+    <p class="footer">KeyPale — Tekeyチャットパレット用エディタ</p>
+  </main>
+
+  <script>
+    (function () {
+      var links = document.querySelectorAll('.toc-tree a[href^="#"]');
+      function setActive() {
+        var id = (location.hash || '#about').slice(1);
+        links.forEach(function (a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+      setActive();
+      window.addEventListener('hashchange', setActive);
+      links.forEach(function (a) {
+        a.addEventListener('click', function () { setActive(); });
+      });
+    })();
+  </script>
+</body>
+</html>

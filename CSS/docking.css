@@ -1,0 +1,523 @@
+/* CSS/docking.css */
+
+/* body：高さを固定 */
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 最大化時：タスクバーに隠れないよう実際の表示高さで制限 */
+body.is-maximized {
+  height: var(--viewport-height, 100vh) !important;
+  max-height: var(--viewport-height, 100vh) !important;
+}
+
+/* タイトルバー：固定高さ */
+#title-bar {
+  flex-shrink: 0;
+  height: 30px;
+}
+
+/* コンテナ：残りの領域を占め、幅縮小時も要素が縮むようにする */
+#docking-container {
+  flex: 1;
+  position: relative;
+  background-color: var(--bg-color);
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* パネルの中身 */
+.docking-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* エディタパネル */
+.editor-panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* CodeMirror を親要素いっぱいに */
+.editor-panel-content .CodeMirror {
+  flex: 1;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* リストやプレビュー */
+.snippet-list { flex: 1; overflow-y: auto; }
+#preview-content { flex: 1; padding: 15px; overflow-y: auto; user-select: text; -webkit-user-select: text; }
+
+/* プルダウン目次パネル */
+.dropdown-toc-list { list-style: none; }
+.dropdown-toc-item { padding: 4px 8px; cursor: pointer; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dropdown-toc-item:hover { background: rgba(128, 128, 128, 0.2); }
+.dropdown-toc-item.toc-parent { font-weight: bold; color: var(--tekey-parent-color, #aaddff); }
+.dropdown-toc-item.toc-child { padding-left: 16px; color: var(--tekey-child-color, #ddd); font-size: 11px; }
+.dropdown-toc-empty { margin: 8px 0; font-size: 11px; color: var(--text-muted, #888); }
+
+/* パネル内ツールバー（メニュー・折りたたみ用） */
+.panel-toolbar-simple {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  min-height: 32px;
+  padding: 6px 8px;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--ui-border);
+  flex-shrink: 0;
+}
+
+.panel-header-spacer {
+  flex: 1;
+  min-width: 0;
+}
+.panel-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.panel-header-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.panel-menu-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 2px 6px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+.panel-menu-btn:hover {
+  opacity: 1;
+  background: var(--input-bg);
+  border-radius: 3px;
+}
+
+.panel-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  z-index: 1000;
+  min-width: 140px;
+}
+.panel-dropdown.hidden {
+  display: none;
+}
+
+.panel-menu-item {
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.panel-menu-item:hover {
+  background: var(--accent-color);
+}
+
+/* スニペット・変数パネルの項目サイズスライダー（ツールバー左側） */
+.panel-header-left {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+.panel-size-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  color: var(--text-color);
+}
+.panel-size-slider .panel-size-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.85;
+}
+.panel-size-slider input[type="range"] {
+  width: 44px;
+  height: 4px;
+  margin: 0;
+}
+.panel-size-slider .slider-value {
+  font-size: 10px;
+  min-width: 18px;
+  text-align: right;
+}
+
+/* パネル内ツールバー（プレビュー用） */
+.panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--ui-bg);
+  border-bottom: 1px solid var(--ui-border);
+  flex-shrink: 0;
+}
+
+.toolbar-btn {
+  padding: 2px 6px;
+  font-size: 11px;
+  background: var(--input-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 3px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+.toolbar-btn:hover {
+  background: var(--accent-color);
+}
+
+.toolbar-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+.toolbar-checkbox input {
+  margin: 0;
+}
+
+/* エディタオプション開閉ボタン（開いてる時は矢印が上向きに回転） */
+.editor-options-toggle svg { transition: transform 0.2s ease; }
+.editor-options-toggle.editor-options-open svg { transform: rotate(180deg); }
+
+/* エディタオプションバー（▼で表示） */
+.editor-options-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--input-bg);
+  border-bottom: 1px solid var(--ui-border);
+  flex-shrink: 0;
+}
+.editor-opt-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.editor-opt-btn:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+.editor-opt-btn.is-active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+.editor-opt-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.editor-opt-color input[type="color"] {
+  width: 26px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.toolbar-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+}
+.toolbar-slider input[type="range"] {
+  width: 48px;
+  height: 4px;
+  margin: 0;
+}
+.toolbar-slider .slider-value {
+  font-size: 10px;
+  min-width: 22px;
+  text-align: right;
+}
+.preview-toolbar .toolbar-slider + .toolbar-slider {
+  margin-left: 6px;
+}
+
+#preview-content mark.preview-search-hit {
+  background-color: var(--accent-color);
+  color: inherit;
+  opacity: 0.6;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+/* プレビューツールバー用 */
+.preview-toolbar {
+  flex-wrap: wrap;
+}
+.toolbar-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+}
+.toolbar-toggle input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* プレビュー背景モード */
+#preview-content.bg-dark {
+  background-color: #424242;
+}
+#preview-content.bg-light {
+  background-color: #FFFFFF;
+  color: #333;
+}
+#preview-content.bg-transparent {
+  background-color: transparent;
+}
+
+/* Tekeyプレビューのプルダウンタイトル：背景モードやドラッグの有無に関係なく、常にテーマの親/子色を使用（エディタと一致） */
+#preview-content details.tekey-parent > summary,
+#preview-content details.tekey-child > summary {
+  display: flex; align-items: center; padding: 4px 8px; border-radius: 3px;
+}
+#preview-content details.tekey-parent > summary::after,
+#preview-content details.tekey-child > summary::after {
+  content: ""; flex: 1; margin-left: 10px; opacity: 0.6;
+}
+#preview-content details.tekey-parent > summary {
+  color: var(--tekey-parent-color) !important;
+  -webkit-text-fill-color: var(--tekey-parent-color) !important;
+}
+#preview-content details.tekey-parent > summary::after {
+  height: 1px;
+  background-color: var(--accent-color);
+}
+#preview-content details.tekey-child > summary {
+  color: var(--tekey-child-color) !important;
+  -webkit-text-fill-color: var(--tekey-child-color) !important;
+}
+#preview-content details.tekey-child > summary::after {
+  height: 0;
+  border-bottom: 1px dashed var(--accent-color);
+}
+
+/* ========================================
+   GoldenLayout v2 テーマ微調整
+   ======================================== */
+
+/* ルート */
+.lm_root {
+  background: var(--bg-color);
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Golden Layout のタブヘッダー（テーマに合わせたバー形式） */
+/* 高さは 20px のままにし、goldenlayout-base の .lm_stack > .lm_items の bottom: 20px と一致させる（ずれると下部が途切れる） */
+/* セピア時は --gl-tab-bg / --gl-tab-bg-active を使用 */
+.lm_header {
+  background: var(--gl-tab-bg, var(--ui-bg)) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-bottom: none !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+  width: 100% !important;
+  box-shadow: none !important;
+}
+
+.lm_header .lm_tabs {
+  width: 100% !important;
+  display: flex !important;
+}
+
+/* タブ（テーマカラー・全幅・細い枠線のみ）※高さ 20px で GL 内部計算と一致 */
+.lm_header .lm_tab,
+.lm_tab {
+  background: var(--gl-tab-bg, var(--ui-bg)) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-bottom: none !important;
+  padding: 0 12px !important;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 0 !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 !important;
+  width: 100% !important;
+  cursor: grab;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+.lm_tab:active {
+  cursor: grabbing;
+}
+
+.lm_header .lm_tab:hover,
+.lm_tab:hover {
+  background: var(--gl-tab-bg-active, var(--input-bg)) !important;
+  color: var(--text-color) !important;
+}
+
+.lm_header .lm_tab.lm_active,
+.lm_tab.lm_active {
+  background: var(--gl-tab-bg-active, var(--input-bg)) !important;
+  color: var(--text-color) !important;
+  box-shadow: none !important;
+}
+
+/* タブの閉じるボタン・最大化・ポップアウト・コントロール類を非表示 */
+.lm_tab .lm_close_tab,
+.lm_maximise,
+.lm_popout,
+.lm_close,
+.lm_controls,
+.lm_tabdropdown {
+  display: none !important;
+}
+
+/* タブタイトルを全幅に */
+.lm_tab .lm_title {
+  flex: 1 !important;
+  width: 100% !important;
+}
+
+/* テーマ外の影・白を無効化（ドラッグ時もテーマカラー） */
+.lm_dragProxy .lm_header .lm_tab,
+.lm_stack .lm_header .lm_tab,
+.lm_dragProxy .lm_header,
+.lm_stack .lm_header {
+  box-shadow: none !important;
+  background: var(--gl-tab-bg, var(--ui-bg)) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-bottom: none !important;
+}
+.lm_dragProxy .lm_header .lm_tab.lm_active,
+.lm_stack .lm_header .lm_tab.lm_active {
+  background: var(--gl-tab-bg-active, var(--input-bg)) !important;
+}
+
+/* パネルコンテンツ領域（テーマに合わせた枠線） */
+.lm_content {
+  background: var(--bg-color) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* スプリッター／タブドラッグ中も見た目を維持（body に .lm_dragging が付く） */
+/* エディタの --tekey-parent/child は変えず、プレビューの見出しだけセピア時の #aaddff 対策で上書き */
+body.lm_dragging::selection,
+body.lm_dragging *::selection {
+  background: var(--ui-border) !important;
+  color: var(--text-color) !important;
+}
+body.lm_dragging * {
+  -webkit-tap-highlight-color: transparent !important;
+}
+body.lm_dragging .lm_header,
+body.lm_dragging .lm_header * {
+  color: var(--text-color) !important;
+}
+body.lm_dragging .lm_header .lm_tab {
+  background-color: var(--gl-tab-bg, var(--ui-bg)) !important;
+  background-image: none !important;
+}
+body.lm_dragging .lm_header .lm_tab.lm_active,
+body.lm_dragging .lm_header .lm_tab.lm_active.lm_focused {
+  background-color: var(--gl-tab-bg-active, var(--input-bg)) !important;
+}
+body.lm_dragging .docking-panel input,
+body.lm_dragging .docking-panel .tab-title,
+body.lm_dragging .docking-panel label {
+  color: var(--text-color) !important;
+}
+/* ドラッグ中は JS で body に --tekey-parent/child をコピーしているので、summary でその変数を明示して確実に適用 */
+body.lm_dragging #preview-content details.tekey-parent > summary,
+body.lm_dragging .preview-pane details.tekey-parent > summary {
+  color: var(--tekey-parent-color) !important;
+  -webkit-text-fill-color: var(--tekey-parent-color) !important;
+}
+body.lm_dragging #preview-content details.tekey-child > summary,
+body.lm_dragging .preview-pane details.tekey-child > summary {
+  color: var(--tekey-child-color) !important;
+  -webkit-text-fill-color: var(--tekey-child-color) !important;
+}
+
+/* ========================================
+   スプリッター（リサイズ用の境界線）
+   ======================================== */
+
+/* スプリッターのスタイル（Golden Layout デフォルトを尊重） */
+.lm_splitter {
+  background: var(--ui-bg) !important;
+}
+.lm_splitter:hover {
+  background: var(--accent-color) !important;
+}
+
+/* ドラッグ中のハイライト */
+.lm_dropTargetIndicator {
+  background: var(--accent-color) !important;
+  opacity: 0.3;
+}
+

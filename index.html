@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>KeyPale</title>
+
+    <!-- 読み込み中も暗い画面にする（白フラッシュ防止） -->
+    <style>
+      html, body {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+    <!-- 既存CSS（フォルダ名は Keypale - K では CSS） -->
+    <link rel="stylesheet" href="CSS/style-base.css">
+    <link rel="stylesheet" href="CSS/ui-components.css">
+    <link rel="stylesheet" href="CSS/ui-navigation.css">
+    <link rel="stylesheet" href="CSS/ui-panels.css">
+    <link rel="stylesheet" href="CSS/ui-modals.css">
+    <link rel="stylesheet" href="CSS/style-content.css">
+    <link rel="stylesheet" href="CSS/libs.css">
+
+    <!-- Golden Layout（ローカルから読み込み・高速化） -->
+    <link rel="stylesheet" href="node_modules/golden-layout/dist/css/goldenlayout-base.css">
+    <link rel="stylesheet" href="node_modules/golden-layout/dist/css/themes/goldenlayout-dark-theme.css">
+    <link rel="stylesheet" href="CSS/docking.css">
+
+    <!-- CodeMirror（ローカルから読み込み・高速化） -->
+    <link rel="stylesheet" href="node_modules/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="node_modules/codemirror/theme/pastel-on-dark.css">
+    <link rel="stylesheet" href="node_modules/codemirror/addon/fold/foldgutter.css">
+    <script src="node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldcode.js"></script>
+    <script src="node_modules/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="node_modules/codemirror/addon/fold/markdown-fold.js"></script>
+    <script src="node_modules/codemirror/addon/fold/xml-fold.js"></script>
+    <script src="node_modules/codemirror/addon/search/searchcursor.js"></script>
+    <script src="node_modules/codemirror/mode/xml/xml.js"></script>
+    <script src="node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="node_modules/codemirror/mode/css/css.js"></script>
+    <script src="node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+    <script src="renderer-docking.js" type="module"></script>
+  </head>
+  <body>
+    <header id="title-bar">
+      <div class="title-drag-area">
+        <div class="menu-wrapper" style="-webkit-app-region: no-drag; position: relative; z-index: 3000;">
+          <button id="app-menu-btn" class="icon-btn" title="メニュー">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
+          <div id="app-menu-dropdown" class="dropdown-menu menu-categories hidden">
+            <div class="menu-category" data-category="file">
+              <span class="menu-category-label">ファイル</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item" id="menu-new-tab">新規タブ <span class="menu-shortcut" data-shortcut-id="newTab"></span></div>
+                <div class="menu-item" id="menu-open">開く(txt) <span class="menu-shortcut" data-shortcut-id="openTxt"></span></div>
+                <div class="menu-item" id="menu-open-json">JSONからタブを開く(json) <span class="menu-shortcut" data-shortcut-id="openJson"></span></div>
+                <div class="menu-item" id="menu-save">上書き保存 (txt) <span class="menu-shortcut" data-shortcut-id="save"></span></div>
+                <div class="menu-item" id="menu-save-as">名前を付けて保存... <span class="menu-shortcut" data-shortcut-id="saveAs"></span></div>
+              </div>
+            </div>
+            <div class="menu-category" data-category="tekey">
+              <span class="menu-category-label">Tekey連携 (JSON)</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item" id="menu-save-tekey-tab">現在のタブを保存 (.json) <span class="menu-shortcut" data-shortcut-id="saveTekeyTab"></span></div>
+                <div class="menu-item" id="menu-save-tekey-all">全タブまとめて保存 (.json) <span class="menu-shortcut" data-shortcut-id="saveTekeyAll"></span></div>
+              </div>
+            </div>
+            <div class="menu-category" data-category="view">
+              <span class="menu-category-label">表示</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item" id="menu-zoom-in">ズーム イン <span class="menu-shortcut" data-shortcut-id="zoomIn"></span></div>
+                <div class="menu-item" id="menu-zoom-out">ズーム アウト <span class="menu-shortcut" data-shortcut-id="zoomOut"></span></div>
+                <div class="menu-item" id="menu-zoom-reset">100% に戻す <span class="menu-shortcut" data-shortcut-id="zoomReset"></span></div>
+              </div>
+            </div>
+            <div class="menu-category" data-category="window">
+              <span class="menu-category-label">ウィンドウ</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item menu-item-checkable checked" data-panel="editor-panel" data-panel-title="エディタ"><span class="menu-check" aria-hidden="true">✓</span>エディタを表示</div>
+                <div class="menu-item menu-item-checkable checked" data-panel="preview-panel" data-panel-title="プレビュー"><span class="menu-check" aria-hidden="true">✓</span>プレビューを表示</div>
+                <div class="menu-item menu-item-checkable checked" data-panel="snippet-panel" data-panel-title="スニペット"><span class="menu-check" aria-hidden="true">✓</span>スニペットを表示</div>
+                <div class="menu-item menu-item-checkable checked" data-panel="variable-panel" data-panel-title="変数"><span class="menu-check" aria-hidden="true">✓</span>変数を表示</div>
+                <div class="menu-item menu-item-checkable checked" data-panel="dropdown-toc-panel" data-panel-title="プルダウン目次"><span class="menu-check" aria-hidden="true">✓</span>プルダウン目次を表示</div>
+              </div>
+            </div>
+            <div class="menu-category" data-category="settings">
+              <span class="menu-category-label">設定</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item" id="menu-options">オプション設定... <span class="menu-shortcut" data-shortcut-id="options"></span></div>
+                <div class="menu-item" id="menu-reset-layout">レイアウト初期化 <span class="menu-shortcut" data-shortcut-id="resetLayout"></span></div>
+              </div>
+            </div>
+            <div class="menu-category" data-category="help">
+              <span class="menu-category-label">ヘルプ</span>
+              <span class="menu-arrow" aria-hidden="true">▶</span>
+              <div class="menu-submenu hidden">
+                <div class="menu-item" id="menu-help">ヘルプを開く <span class="menu-shortcut" data-shortcut-id="openHelp"></span></div>
+                <div class="menu-item" id="menu-about">バージョン情報 <span class="menu-shortcut" data-shortcut-id="about"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-logo">KeyPale</div>
+      </div>
+
+      <div class="title-controls-area">
+        <button id="theme-panel-btn" class="icon-btn">🎨</button>
+        <div class="window-controls">
+          <button id="min-btn" class="win-btn">─</button>
+          <button id="max-btn" class="win-btn">☐</button>
+          <button id="close-btn" class="win-btn close-win-btn">×</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="settings-panel" class="settings-panel hidden">
+      <div class="settings-section">
+        <label class="settings-label">ベーステーマ</label>
+        <div class="theme-buttons">
+          <button class="theme-btn" data-theme="dark" title="ダーク">🌑</button>
+          <button class="theme-btn" data-theme="light" title="ライト">☀️</button>
+          <button class="theme-btn" data-theme="sepia" title="セピア">📜</button>
+          <button class="theme-btn" data-theme="green" title="グリーン">🌿</button>
+        </div>
+      </div>
+      <hr class="settings-divider">
+      <div class="settings-section">
+        <label class="settings-label">アクセントカラー (全体)</label>
+        <div class="color-control">
+          <input type="color" id="accent-color-picker" value="#007acc">
+          <span id="accent-color-value" class="color-value-text">#007ACC</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="docking-container"></div>
+
+    <!-- 既存のモーダル類（lists/ui が参照） -->
+    <div id="snippet-modal-overlay" class="modal-overlay hidden">
+      <div class="modal-box modal-box-form">
+        <h3 class="modal-title" id="snippet-modal-title">スニペット追加</h3>
+        <div class="modal-body">
+          <label class="modal-label">表示名</label>
+          <input type="text" id="snippet-modal-label" class="input-text modal-input">
+          <label class="modal-label">内容</label>
+          <textarea id="snippet-modal-content" class="input-text modal-textarea modal-textarea-tall"></textarea>
+          <label class="modal-label">ショートカット（任意）</label>
+          <input type="text" id="snippet-modal-shortcut" class="input-text shortcut-capture-input modal-input" placeholder="例: Alt+Shift+A">
+        </div>
+        <div class="modal-buttons">
+          <button id="snippet-modal-cancel" class="small-btn">キャンセル</button>
+          <button id="snippet-modal-save" class="action-btn">保存</button>
+        </div>
+      </div>
+    </div>
+    <div id="variable-modal-overlay" class="modal-overlay hidden">
+      <div class="modal-box modal-box-form">
+        <h3 class="modal-title" id="variable-modal-title">変数追加</h3>
+        <div class="modal-body">
+          <label class="modal-label">変数名</label>
+          <input type="text" id="variable-modal-key" class="input-text modal-input">
+          <label class="modal-label">値</label>
+          <textarea id="variable-modal-value" class="input-text modal-textarea"></textarea>
+          <label class="modal-label">ショートカット（任意）</label>
+          <input type="text" id="variable-modal-shortcut" class="input-text shortcut-capture-input modal-input" placeholder="例: Alt+Shift+A">
+        </div>
+        <div class="modal-buttons">
+          <button id="variable-modal-cancel" class="small-btn">キャンセル</button>
+          <button id="variable-modal-save" class="action-btn">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="option-modal-overlay" class="modal-overlay hidden">
+      <div id="option-modal-box" class="modal-box options-modal" style="width: 620px; max-height: 80vh; display:flex; flex-direction:column;">
+        <h3 class="modal-title">オプション設定</h3>
+        <div id="options-modal-body" style="overflow-y: auto; flex: 1; min-height: 0; display: flex; flex-direction: column;">
+          <!-- コンテンツは options-content.html から読み込み -->
+        </div>
+        <div class="modal-buttons" style="margin-top:15px; flex-shrink: 0;"><button id="option-modal-close" class="action-btn">閉じる</button></div>
+      </div>
+    </div>
+
+    <div id="snippet-context-menu" class="context-menu hidden">
+      <div class="context-menu-item" id="ctx-edit">編集</div>
+      <div class="context-menu-item" id="ctx-delete">削除</div>
+    </div>
+
+    <!-- エディタ用右クリックメニュー -->
+    <div id="editor-context-menu" class="context-menu hidden">
+      <div class="context-menu-item" id="editor-ctx-undo" data-cmd="undo">元に戻す(U) <span class="context-menu-shortcut">Ctrl+Z</span></div>
+      <div class="context-menu-item" id="editor-ctx-redo" data-cmd="redo">やり直し(R) <span class="context-menu-shortcut">Ctrl+Y</span></div>
+      <div class="context-menu-sep"></div>
+      <div class="context-menu-item" id="editor-ctx-cut" data-cmd="cut">切り取り(I) <span class="context-menu-shortcut">Ctrl+X</span></div>
+      <div class="context-menu-item" id="editor-ctx-copy" data-cmd="copy">コピー(C) <span class="context-menu-shortcut">Ctrl+C</span></div>
+      <div class="context-menu-item" id="editor-ctx-paste" data-cmd="paste">貼り付け(P) <span class="context-menu-shortcut">Ctrl+V</span></div>
+      <div class="context-menu-item" id="editor-ctx-delete" data-cmd="delete">削除(D) <span class="context-menu-shortcut">Delete</span></div>
+      <div class="context-menu-sep"></div>
+      <div class="context-menu-item" id="editor-ctx-selectall" data-cmd="selectAll">すべて選択(A) <span class="context-menu-shortcut">Ctrl+A</span></div>
+      <div class="context-menu-sep"></div>
+      <div class="context-menu-item" id="editor-ctx-indent-all-full" data-cmd="indentAllFullWidth">全行先頭に全角スペース <span class="context-menu-shortcut" data-shortcut-id="indentAllFull"></span></div>
+      <div class="context-menu-item" id="editor-ctx-indent-sel-full" data-cmd="indentSelectionFullWidth">選択行の先頭に全角スペース <span class="context-menu-shortcut" data-shortcut-id="indentSelectionFull"></span></div>
+    </div>
+
+    <input type="file" id="file-import-input" accept=".json,.txt" style="display:none">
+
+    <!-- バージョン情報モーダル -->
+    <div id="about-modal-overlay" class="modal-overlay hidden">
+      <div class="modal-box" style="width: 320px;">
+        <h3 class="modal-title">バージョン情報</h3>
+        <p id="about-app-name" style="font-size: 16px; font-weight: bold; margin: 0 0 8px 0; color: var(--text-color);">KeyPale</p>
+        <p id="about-version" style="font-size: 13px; margin: 0 0 8px 0; color: var(--text-color); opacity: 0.9;">Version 1.0.0</p>
+        <p style="font-size: 11px; margin: 0 0 12px 0; color: var(--text-color); opacity: 0.7;">Tekeyチャットパレット用エディタ</p>
+        <p style="font-size: 12px; margin: 0; color: var(--text-color);">
+          開発者: <a id="about-developer-link" href="https://x.com/nukonuko_4" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">ぬこた (X)</a>
+        </p>
+        <div class="modal-buttons" style="margin-top: 20px;">
+          <button id="about-modal-close" class="action-btn">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
